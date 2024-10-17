@@ -50,7 +50,7 @@ body {
   margin: 0 25px;
 }
 
-.nav a, button{
+.nav a, .nav button{
   text-decoration: none;
   color: white;
   padding: 10px 12px;
@@ -59,13 +59,13 @@ body {
   border-radius: 10px;
 }
 
-.nav a:hover, button:hover {
+.nav a:hover, .nav button:hover {
   background-color: var(--pink);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
   border-radius: 10px;
 }
 
-button {
+.nav button {
   color: white;
   background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
@@ -74,9 +74,10 @@ button {
   font-size: 15px;
   font-weight: 400;
 }
-/* .nav li:first-child > a {
-  border-bottom: 1px solid #FFD447;
-} */
+
+li {
+  list-style: none;
+}
 
 .nav-link.active {
   font-weight: bold;
@@ -100,9 +101,9 @@ button {
 .dropdown-menu {
   will-change: transform, opacity;
   position: absolute;
-  top: 50px;
+  top: 130px;
   right: 0;
-  background-color: #204E7B;
+  background-color: var(--purpdark);
   width: 100%;
   z-index: 999;
   opacity: 0;
