@@ -152,9 +152,9 @@ const NavTabs = () => {
                 </Link>
               </li>
               {state.isAuthenticated ? (
-                <li>
+                <li className="logoutbutton">
                   <button
-                    className="nav-link"
+                    className="nav-link menu"
                     onClick={() => {
                       handleLogout();
                       setIsMenuOpen(false); // Close menu on logout

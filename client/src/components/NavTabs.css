@@ -50,6 +50,12 @@ body {
   margin: 0 25px;
 }
 
+.logoutbutton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .nav a, .nav button{
   text-decoration: none;
   color: white;
@@ -65,7 +71,7 @@ body {
   border-radius: 10px;
 }
 
-.nav button {
+.nav button, .menu {
   color: white;
   background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
