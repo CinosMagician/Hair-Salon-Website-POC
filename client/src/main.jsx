@@ -1,21 +1,28 @@
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ApolloProvider, InMemoryCache, ApolloClient } from '@apollo/client';
 import App from './App';
 import Home from './pages/Home';
 import Booking from './pages/Booking';
 import Shop from './pages/Shop';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Error from './pages/Error'; // Ensure you import or define the Error component
+import Error from './pages/Error';
+
+// Initialize Apollo Client
+const client = new ApolloClient({
+  uri: import.meta.env.VITE_REACT_APP_GRAPHQL_ENDPOINT ?? 'http://localhost:3001/graphql',
+  cache: new InMemoryCache(),
+});
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <Error />, // Define this component or import it
+    errorElement: <Error />,
     children: [
       {
-        path: 'home', // No need to use 'index: true' unless this is your default route
+        path: 'home',
         element: <Home />,
       },
       {
@@ -38,6 +45,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router} />
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <ApolloProvider client={client}>
+    <RouterProvider router={router} />
+  </ApolloProvider>
 );

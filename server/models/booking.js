@@ -1,40 +1,35 @@
 const mongoose = require('mongoose');
 
 // Define the event schema
-const eventSchema = new mongoose.Schema({
+const bookingSchema = new mongoose.Schema({
   // Name of the event
-  name: {
+  firstName: {
     type: String,
     required: true
   },
   // Description of the event
-  description: {
+  lastName: {
     type: String,
     required: true
   },
   // Date of the event
-  date: {
+  dob: {
     type: Date,
     required: true
   },
   // Reference to the user who created the event
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
+  email: {
+    type: String,
     ref: 'User',
     required: true
   },
-  songRequests: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'SongRequest'
-    }
-  ]
-}, {
-  // Enable timestamps for createdAt and updatedAt
-  timestamps: true
+  phone: {
+      type: Number,
+      required: true
+  }
 });
 
 // Create the Event model from the schema
-const Event = mongoose.model('Event', eventSchema);
+const Booking = mongoose.model('Booking', bookingSchema);
 
-module.exports = Event;
+module.exports = Booking;

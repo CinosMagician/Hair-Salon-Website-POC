@@ -1,5 +1,4 @@
 import { Outlet } from 'react-router-dom';
-
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { SalonProvider } from './utils/GlobalState';
@@ -10,7 +9,7 @@ import Auth from './utils/auth';
 
 // Create an HTTP link to the GraphQL server
 const httpLink = createHttpLink({
-  uri: '/graphql',
+  uri: import.meta.env.VITE_REACT_APP_GRAPHQL_ENDPOINT ?? 'http://localhost:3001/graphql',
 });
 
 // Create a middleware to attach the JWT token to every request
