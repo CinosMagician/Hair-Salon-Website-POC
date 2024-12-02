@@ -1,0 +1,29 @@
+[
+    {
+      "name": "Shampoo",
+      "desc": "Shampoo used to cleanse hair",
+      "price": 25.99,
+      "imageUrl": "/assets/images/products/shampoo.png",
+      "stock": 24,
+      "trueStock": 24,
+      "count": 0
+    },
+    {
+      "name": "Conditioner",
+      "desc": "Conditioner used to cleanse hair",
+      "price": 29.99,
+      "imageUrl": "/assets/images/products/conditioner.png",
+      "stock": 24,
+      "trueStock": 24,
+      "count": 0
+    },
+    {
+      "name": "Scissors",
+      "desc": "Scissors used to cut hair",
+      "price": 42.99,
+      "imageUrl": "/assets/images/products/shampoo.png",
+      "stock": 5,
+      "trueStock": 5,
+      "count": 0
+    }
+]

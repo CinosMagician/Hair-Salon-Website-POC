@@ -9,7 +9,7 @@ import Auth from './utils/auth';
 
 // Create an HTTP link to the GraphQL server
 const httpLink = createHttpLink({
-  uri: import.meta.env.VITE_REACT_APP_GRAPHQL_ENDPOINT ?? 'http://localhost:3001/graphql',
+  uri: import.meta.env.VITE_REACT_APP_GRAPHQL_ENDPOINT ?? 'http://localhost:3099/graphql',
 });
 
 // Create a middleware to attach the JWT token to every request

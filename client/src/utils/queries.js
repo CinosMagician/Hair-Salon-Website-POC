@@ -5,25 +5,29 @@ export const GET_ME = gql`
   query me {
     me {
       _id
-      username
-      events {
+      email
+      firstName
+      lastName
+      isStaff
+      bookings {
+        _id
+        bookingDate
+        bookingTime
+        bookedWith {
+          _id
+          email
+          firstName
+          lastName
+        }
+      }
+      cart {
         _id
         name
-        description
-        date
-      }
-      songRequests {
-        _id
-        title
-        artist
-        upvotes
-      }
-      upvotes {
-        _id
-        songRequest {
-          _id
-          title
-        }
+        desc
+        price
+        imageUrl
+        count
+        stock
       }
     }
   }
@@ -34,124 +38,113 @@ export const GET_USERS = gql`
   query users {
     users {
       _id
-      username
+      email
+      firstName
+      lastName
+      isStaff
     }
   }
 `;
 
-// Query to get a user by username
+// Query to get a user by email
 export const GET_USER = gql`
-  query user($username: String!) {
-    user(username: $username) {
+  query user($email: String!) {
+    user(email: $email) {
       _id
-      username
-      events {
+      email
+      firstName
+      lastName
+      isStaff
+      bookings {
         _id
-        name
-        description
-        date
-      }
-      songRequests {
-        _id
-        title
-        artist
-        upvotes
-      }
-      upvotes {
-        _id
-        songRequest {
+        bookingDate
+        bookingTime
+        bookedWith {
           _id
-          title
+          email
+          firstName
+          lastName
         }
       }
-    }
-  }
-`;
-
-// Query to get all events
-export const GET_EVENTS = gql`
-  query events {
-    events {
-      _id
-      name
-      description
-      date
-      user {
-        _id
-        username
-      }
-      songRequests {
-        _id
-        title
-        artist
-        upvotes
-      }
-    }
-  }
-`;
-
-// Query to get a single event by ID
-export const GET_EVENT = gql`
-  query event($_id: ID!) {
-    event(_id: $_id) {
-      _id
-      name
-      description
-      date
-      user {
-        _id
-        username
-      }
-      songRequests {
-        _id
-        title
-        artist
-        user {
-          _id
-          username
-        }
-        upvotes
-      }
-    }
-  }
-`;
-
-// Query to get song requests for a specific event
-export const GET_SONG_REQUESTS = gql`
-  query songRequests($event: ID!) {
-    songRequests(event: $event) {
-      _id
-      title
-      artist
-      event {
+      cart {
         _id
         name
+        desc
+        price
+        imageUrl
+        count
+        stock
       }
-      user {
-        _id
-        username
-      }
-      upvotes
     }
   }
 `;
 
-// Query to get a specific song request by ID
-export const GET_SONG_REQUEST = gql`
-  query songRequest($_id: ID!) {
-    songRequest(_id: $_id) {
+// Query to get all bookings
+export const GET_BOOKINGS = gql`
+  query bookings {
+    bookings {
       _id
-      title
-      artist
-      event {
-        _id
-        name
-      }
+      bookingDate
+      bookingTime
       user {
         _id
-        username
+        email
+        firstName
+        lastName
       }
-      upvotes
+      bookedWith {
+        _id
+        email
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
+// Query to get all products
+export const GET_PRODUCTS = gql`
+  query products {
+    products {
+      _id
+      name
+      desc
+      price
+      imageUrl
+      stock
+      trueStock
+      count
+    }
+  }
+`;
+
+// Query to get a product by ID
+export const GET_PRODUCT = gql`
+  query product($id: ID!) {
+    product(_id: $id) {
+      _id
+      name
+      desc
+      price
+      imageUrl
+      stock
+      trueStock
+      count
+    }
+  }
+`;
+
+// Query to get a user's cart
+export const GET_CART = gql`
+  query cart($userId: ID!) {
+    cart(userId: $userId) {
+      _id
+      name
+      desc
+      price
+      imageUrl
+      count
+      stock
     }
   }
 `;

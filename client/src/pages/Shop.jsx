@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import "./Shop.css";
+import { GET_PRODUCTS } from '../utils/queries';
 
 const Shop = () => {
     const navigate = useNavigate();
+    const { loading, error, data } = useQuery(GET_PRODUCTS);
+    const [filteredProducts, setFilteredProducts] = useState([]);
 
-    const [filteredProducts, setFilteredProducts] = useState([
-        { id: 1, name: 'Shampoo', desc: 'Shampoo used to cleanse hair', price: "25.99", imageUrl: '/src/assets/images/products/shampoo.png', stock: 24, count: 0 },
-        { id: 2, name: 'Conditioner', desc: 'Conditioner used to smooth out hair', price: "29.99", imageUrl: '/src/assets/images/products/conditioner.png', stock: 24, count: 0 },
-        { id: 3, name: 'Scissors', desc: 'Scissors used to cut hair', price: "42.99", imageUrl: '/src/assets/images/products/scissors.png', stock: 5, count: 0 },
-    ]);
+    useEffect(() => {
+        if (data && data.products) {
+            // Initialize filteredProducts with products from the query
+            const productsWithCount = data.products.map(product => ({
+                ...product,
+                count: 0 // Initialize count to 0 for each product
+            }));
+            setFilteredProducts(productsWithCount);
+        }
+    }, [data]);
 
     const [cart, setCart] = useState([]);
 
@@ -51,7 +60,7 @@ const Shop = () => {
     const handleIncreaseCount = (productId) => {
         setFilteredProducts((prevProducts) =>
             prevProducts.map((product) =>
-                product.id === productId
+                product._id === productId
                     ? { ...product, count: product.count < product.stock ? product.count + 1 : product.count }
                     : product
             )
@@ -61,12 +70,15 @@ const Shop = () => {
     const handleDecreaseCount = (productId) => {
         setFilteredProducts((prevProducts) =>
             prevProducts.map((product) =>
-                product.id === productId
+                product._id === productId
                     ? { ...product, count: Math.max(0, product.count - 1) }
                     : product
             )
         );
     };
+
+    if (loading) return <p>Loading products...</p>;
+    if (error) return <p>Error fetching products: {error.message}</p>;
 
     return (
         <div>
@@ -74,10 +86,10 @@ const Shop = () => {
             <div className="shopMain">
                 <div className="shopGrid">
                     {filteredProducts.map((product) => (
-                        <div key={product.id} className="product-container">
+                        <div key={product._id} className="product-container">
                             <div
                                 className="product"
-                                onClick={() => handleClick(product.id)}
+                                onClick={() => handleClick(product._id)}
                             >
                                 <h2>{product.name}</h2>
                                 <p>{product.desc} - ${product.price}</p>
@@ -85,9 +97,9 @@ const Shop = () => {
                                 <img src={product.imageUrl} alt={product.name} className='productImage' />
                             </div>
                             <div className="product-controls">
-                                <button onClick={() => handleDecreaseCount(product.id)}>-</button>
+                                <button onClick={() => handleDecreaseCount(product._id)}>-</button>
                                 <span>{product.count}</span>
-                                <button onClick={() => handleIncreaseCount(product.id)}>+</button>
+                                <button onClick={() => handleIncreaseCount(product._id)}>+</button>
                             </div>
                             <button onClick={() => handleAddToCart(product)}>Add to cart</button>
                         </div>

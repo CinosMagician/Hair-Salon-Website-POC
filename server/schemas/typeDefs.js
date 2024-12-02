@@ -2,65 +2,62 @@ const { gql } = require('graphql-tag');
 
 const typeDefs = gql`
   type User {
-    _id: ID!    
-    username: String!    
-    events: [Event]       
-    songRequests: [SongRequest]
-    upvotes: [Upvote]     
+    _id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    isStaff: Boolean!
+    bookings: [Booking]       # User's bookings
+    cart: [Cart]              # Items in the user's cart
   }
 
-  type Event {
-    _id: ID!                
-    name: String!       
-    description: String     
-    date: String!            
-    user: User!        
-    songRequests: [SongRequest] 
+  type Product {
+    _id: ID!
+    name: String!
+    desc: String!
+    price: Float!
+    imageUrl: String
+    stock: Int!
+    trueStock: Int!           # Actual stock available
+    count: Int                # Quantity in the user's cart
   }
 
-  type SongRequest {
-    _id: ID!                 # Unique identifier for the song request
-    title: String!           # Title of the requested song
-    artist: String           # Artist of the requested song (optional)
-    event: Event!            # Event for which the song is requested
-    user: User              # User who made the song request
-    upvotes: Int        # Number of upvotes for this song request
+  type Booking {
+    _id: ID!                  # Unique identifier for the booking
+    user: User!               # User who made the booking
+    bookingDate: String!      # Date of the booking (ISO format recommended)
+    bookingTime: String!      # Time of the booking
+    bookedWith: User!         # Staff member booked for the appointment
   }
 
-  type Upvote {
-    _id: ID!                 # Unique identifier for the upvote
-    user: User!            
-    songRequest: SongRequest! # Song request that was upvoted
+  type Cart {
+    _id: ID!
+    products: [Product!]!     # Products in the cart
   }
 
   # Auth type for authentication responses
   type Auth {
-    token: ID!               # JWT token for authentication
-    user: User               # User who was authenticated
+    token: ID!                # JWT token for authentication
+    user: User                # Authenticated user
   }
 
   # Query type defines all the available queries
   type Query {
-    me: User                 
-    users: [User]            # Get all users
-    user(username: String!): User # Get a user by username
-    events: [Event]          # Get all events
-    event(_id: ID!): Event   # Get an event by ID
-    songRequests(event: ID!): [SongRequest] # Get all song requests for an event
-    songRequest(_id: ID!): SongRequest # Get a song request by ID
+    me: User                  # Get the authenticated user's data
+    users: [User]             # Get all users
+    user(email: String!): User # Get a user by email
+    bookings: [Booking]       # Get all bookings
+    booking(_id: ID!): Booking # Get a booking by ID
+    products: [Product]
+    product(_id: ID!): Product
   }
 
   # Mutation type defines all the available mutations
   type Mutation {
-    addUser(username: String!, password: String!): Auth 
-    login(username: String!, password: String!): Auth #
-    addEvent(name: String!, description: String!, date: String!): Event 
-    addSongRequest(eventId: ID!, title: String!, artist: String): SongRequest
-    addUpvote(songRequestId: ID!, guestId: String): SongRequest 
-    removeEvent(eventId: ID!): Event # Remove an event
-    removeSongRequest(songRequestId: ID!): SongRequest 
-    removeUpvote(songRequestId: ID!, guestId: String): SongRequest 
-    updateEvent(eventId: ID!, name: String!, description: String!, date: String!): Event 
+    addUser(email: String!, password: String!, firstName: String!, lastName: String!): Auth
+    login(email: String!, password: String!): Auth
+    addBooking(userId: ID!, staffId: ID!, bookingDate: String!, bookingTime: String!): Booking
+    removeBooking(bookingId: ID!)
   }
 `;
 

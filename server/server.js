@@ -10,9 +10,9 @@ const { typeDefs, resolvers } = require("./schemas");
 const { authMiddleware } = require("./utils/auth");
 const db = require("./config/connection");
 
-const PORT = process.env.PORT || 3099;
+const PORT = 3099;
 const app = express();
-
+ 
 // Create a new Apollo server and pass in schema data
 const server = new ApolloServer({
   typeDefs,

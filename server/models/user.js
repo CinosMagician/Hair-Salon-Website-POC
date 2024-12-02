@@ -3,8 +3,8 @@ const bcrypt = require('bcrypt');
 
 // Define the user schema
 const userSchema = new mongoose.Schema({
-  // Username field
-  username: {
+  // Email field
+  email: {
     type: String,
     required: true,
     unique: true,
@@ -15,21 +15,41 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  // Events field
-  events: [{
+  // First name of user
+  firstName: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
+  // Last name of user
+  lastName: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
+    isStaff: {
+      type: Boolean,
+      default: false,
+    },
+    availability: [
+      {
+        date: { type: Date, required: true },
+        timeSlot: { type: String, required: true },
+        isAvailable: { type: Boolean, default: true },
+      },
+    ],
+    // Cart field
+    cart: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Cart'
+    }],
+  // Bookings field
+  bookings: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event'
+    ref: 'Booking'
   }],
-  // SongRequests field
-  songRequests: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'SongRequest'
-  }],
-  // Upvotes field
-  upvotes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Upvote'
-  }]
 }, {
   // Enable timestamps for createdAt and updatedAt
   timestamps: true

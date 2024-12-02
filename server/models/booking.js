@@ -1,35 +1,28 @@
 const mongoose = require('mongoose');
 
-// Define the event schema
 const bookingSchema = new mongoose.Schema({
-  // Name of the event
-  firstName: {
-    type: String,
-    required: true
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Refers to the customer
+    required: true,
   },
-  // Description of the event
-  lastName: {
-    type: String,
-    required: true
+  staffId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Refers to the staff member
+    required: true,
   },
-  // Date of the event
-  dob: {
+  date: {
     type: Date,
-    required: true
+    required: true,
   },
-  // Reference to the user who created the event
-  email: {
+  timeSlot: {
     type: String,
-    ref: 'User',
-    required: true
+    required: true,
   },
-  phone: {
-      type: Number,
-      required: true
-  }
+}, {
+  timestamps: true,
 });
 
-// Create the Event model from the schema
 const Booking = mongoose.model('Booking', bookingSchema);
 
 module.exports = Booking;
