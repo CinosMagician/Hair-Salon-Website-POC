@@ -110,6 +110,14 @@ const NavTabs = () => {
               </li>
             </>
           )}
+          <li className="nav-item">
+            <Link
+              to="/cart"
+              className={isActive("/cart") ? "nav-link active" : "nav-link"}
+            >
+              Cart
+            </Link>
+          </li>
         </ul>
       </nav>
       <AnimatePresence>
@@ -189,6 +197,15 @@ const NavTabs = () => {
                   </li>
                 </>
               )}
+              <li className="nav-item">
+                <Link
+                  to="/cart"
+                  className={isActive("/cart") ? "nav-link active" : "nav-link"}
+                  onClick={() => setIsMenuOpen(false)} // Close menu on click
+                >
+                  Cart
+                </Link>
+              </li>
             </ul>
           </motion.div>
         )}

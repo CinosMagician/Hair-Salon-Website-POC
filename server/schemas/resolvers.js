@@ -54,9 +54,21 @@ const resolvers = {
   Mutation: {
     // Add a new user
     addUser: async (parent, { email, password, firstName, lastName }) => {
-      const user = await User.create({ email, password, firstName, lastName });
-      const token = signToken(user);
-      return { token, user };
+      try {
+        const user = await User.create({ email, password, firstName, lastName });
+        const token = signToken(user);
+        return { token, user };
+      } catch (err) {
+        // Check if the error is a duplicate key error
+        if (err.code === 11000 && err.keyValue.email) {
+          throw new GraphQLError("Email already in use", {
+            extensions: { code: "BAD_USER_INPUT" },
+          });
+        }
+        throw new GraphQLError("An error occurred during signup", {
+          extensions: { code: "INTERNAL_SERVER_ERROR" },
+        });
+      }
     },
     // Login a user
     login: async (parent, { email, password }) => {

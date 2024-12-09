@@ -1,32 +1,35 @@
 const express = require("express");
-// import Apollo server
+const cors = require("cors");
 const { ApolloServer } = require("@apollo/server");
-// import Apollo server middleware
 const { expressMiddleware } = require("@apollo/server/express4");
 const path = require("path");
-// import typeDefs and resolvers
+// const { createProxyMiddleware } = require("http-proxy-middleware");
 const { typeDefs, resolvers } = require("./schemas");
-// import JWT auth middleware
 const { authMiddleware } = require("./utils/auth");
 const db = require("./config/connection");
 
 const PORT = 3099;
 const app = express();
- 
-// Create a new Apollo server and pass in schema data
+
+app.use(
+  cors({
+    origin: "http://localhost:3027", // Adjust to frontend URL later
+    methods: 'GET,POST',
+    credentials: true,
+  })
+);
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 
 const startApolloServer = async () => {
-  // Start the Apollo Server
   await server.start();
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
-  // Apply graphql middleware to express server
   app.use(
     "/graphql",
     expressMiddleware(server, {
@@ -34,17 +37,42 @@ const startApolloServer = async () => {
     })
   );
 
-  // Serve static files in production
-  if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../client/dist")));
+  // Serve static files from /assets
+  app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-    // Catch-all route to serve index.html for any unmatched routes
+  // Optional proxy middleware (if images are hosted externally)
+  // Comment out if images are hosted on this server
+
+  // app.use(
+  //   '/assets/images',
+  //   createProxyMiddleware({
+  //     target: 'http://localhost:3099',
+  //     changeOrigin: true,
+  //     pathRewrite: { '^/assets/images': '/assets/images' },
+  //   })
+  // );
+
+  app.use('/assets', (req, res, next) => {
+    console.log(`Static file request: ${req.path}`);
+    next();
+  });
+  
+
+  // Serve frontend in production
+  // if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../client/dist")));
     app.get("*", (req, res) => {
       res.sendFile(path.join(__dirname, "../client/dist/index.html"));
     });
-  }
+  // }
+  
 
-  // Start the Express server
+  // Error handler
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+  });
+
   db.once("open", () => {
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
@@ -53,5 +81,4 @@ const startApolloServer = async () => {
   });
 };
 
-// Call the function to start the server
 startApolloServer();

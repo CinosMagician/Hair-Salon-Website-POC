@@ -11,7 +11,8 @@ import Error from './pages/Error';
 
 // Initialize Apollo Client
 const client = new ApolloClient({
-  uri: import.meta.env.VITE_REACT_APP_GRAPHQL_ENDPOINT ?? 'http://localhost:3001/graphql',
+  uri: 'http://localhost:3099/graphql',
+  // import.meta.env.VITE_REACT_APP_GRAPHQL_ENDPOINT ?? 
   cache: new InMemoryCache(),
 });
 

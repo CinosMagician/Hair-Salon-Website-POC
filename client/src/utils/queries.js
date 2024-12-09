@@ -113,7 +113,6 @@ export const GET_PRODUCTS = gql`
       imageUrl
       stock
       trueStock
-      count
     }
   }
 `;
@@ -129,7 +128,6 @@ export const GET_PRODUCT = gql`
       imageUrl
       stock
       trueStock
-      count
     }
   }
 `;

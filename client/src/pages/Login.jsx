@@ -51,10 +51,10 @@ export default function Login() {
         <input
           className='col-6 m-2'
           type="text"
-          name="username"
-          value={formState.username}
+          name="email"
+          value={formState.email}
           onChange={handleChange}
-          placeholder="Username"
+          placeholder="Email"
         />
         <input
           className='col-6 m-2'

@@ -12,6 +12,7 @@ const Shop = () => {
     useEffect(() => {
         if (data && data.products) {
             // Initialize filteredProducts with products from the query
+            console.log("Received products:", data.products);
             const productsWithCount = data.products.map(product => ({
                 ...product,
                 count: 0 // Initialize count to 0 for each product

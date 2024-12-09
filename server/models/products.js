@@ -28,11 +28,11 @@ const productSchema = new mongoose.Schema({
     default: 0,
     required: true
   },
-  trueStock: [{
+  trueStock: {
     type: Number,
     default: 0,
     required: true
-  }],
+  },
 });
 
 // Create the SongRequest model from the schema
