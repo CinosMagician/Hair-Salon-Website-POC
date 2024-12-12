@@ -7,6 +7,7 @@ import "./NavTabs.css";
 
 const NavTabs = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false); // State for cart drawer
   const { state } = useSalonContext();
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,6 +19,10 @@ const NavTabs = () => {
 
   const handleMenuToggle = () => {
     setIsMenuOpen((prevState) => !prevState);
+  };
+
+  const handleCartToggle = () => {
+    setIsCartOpen((prevState) => !prevState); // Toggle cart drawer state
   };
 
   const isMobile = window.innerWidth <= 840;
@@ -111,15 +116,49 @@ const NavTabs = () => {
             </>
           )}
           <li className="nav-item">
-            <Link
-              to="/cart"
-              className={isActive("/cart") ? "nav-link active" : "nav-link"}
-            >
+            <button className="nav-link" onClick={handleCartToggle}>
               Cart
-            </Link>
+            </button>
           </li>
         </ul>
       </nav>
+
+      {/* Cart Drawer */}
+      <AnimatePresence>
+        {isCartOpen && (
+          <motion.div
+            className="cart-drawer"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "tween", duration: 0.3 }}
+          >
+            <div className="cart-header">
+              <h2>Your Cart</h2>
+              <button className="close-cart" onClick={handleCartToggle}>
+                &times;
+              </button>
+            </div>
+            <div className="cart-content">
+              <p>Your cart is empty!</p>
+              {/* Dynamically render cart items here */}
+            </div>
+            <div className="cart-footer">
+              <button
+                className="view-cart-btn"
+                onClick={() => {
+                  handleCartToggle(); // Close cart drawer
+                  navigate("/cart"); // Navigate to cart page
+                }}
+              >
+                View Cart
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Dropdown Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -134,7 +173,7 @@ const NavTabs = () => {
                 <Link
                   to="/home"
                   className={isActive("/home") ? "nav-link active" : "nav-link"}
-                  onClick={() => setIsMenuOpen(false)} // Close menu on click
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Home
                 </Link>
@@ -145,7 +184,7 @@ const NavTabs = () => {
                   className={
                     isActive("/booking") ? "nav-link active" : "nav-link"
                   }
-                  onClick={() => setIsMenuOpen(false)} // Close menu on click
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Book Now
                 </Link>
@@ -154,18 +193,18 @@ const NavTabs = () => {
                 <Link
                   to="/shop"
                   className={isActive("/shop") ? "nav-link active" : "nav-link"}
-                  onClick={() => setIsMenuOpen(false)} // Close menu on click
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Shop Here
                 </Link>
               </li>
               {state.isAuthenticated ? (
-                <li className="logoutbutton">
+                <li>
                   <button
-                    className="nav-link menu"
+                    className="nav-link"
                     onClick={() => {
                       handleLogout();
-                      setIsMenuOpen(false); // Close menu on logout
+                      setIsMenuOpen(false);
                     }}
                   >
                     Logout
@@ -179,7 +218,7 @@ const NavTabs = () => {
                       className={
                         isActive("/login") ? "nav-link active" : "nav-link"
                       }
-                      onClick={() => setIsMenuOpen(false)} // Close menu on click
+                      onClick={() => setIsMenuOpen(false)}
                     >
                       Login
                     </Link>
@@ -190,7 +229,7 @@ const NavTabs = () => {
                       className={
                         isActive("/signup") ? "nav-link active" : "nav-link"
                       }
-                      onClick={() => setIsMenuOpen(false)} // Close menu on click
+                      onClick={() => setIsMenuOpen(false)}
                     >
                       Sign Up
                     </Link>
@@ -201,7 +240,7 @@ const NavTabs = () => {
                 <Link
                   to="/cart"
                   className={isActive("/cart") ? "nav-link active" : "nav-link"}
-                  onClick={() => setIsMenuOpen(false)} // Close menu on click
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Cart
                 </Link>

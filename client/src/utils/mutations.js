@@ -24,6 +24,18 @@ export const ADD_USER = gql`
   }
 `;
 
+export const ADD_TO_CART = gql`
+  mutation addToCart($productId: ID!, $quantity: Int!) {
+    addToCart(productId: $productId, quantity: $quantity) {
+      userId
+      items {
+        productId
+        quantity
+      }
+    }
+  }
+`;
+
 // export const ADD_EVENT = gql`
 //   mutation addEvent($name: String!, $description: String!, $date: String!) {
 //     addEvent(name: $name, description: $description, date: $date) {

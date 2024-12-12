@@ -8,6 +8,7 @@ import Shop from './pages/Shop';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Error from './pages/Error';
+import Cart from './pages/Cart';
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
         path: 'signup',
         element: <Signup />,
       },
+      {
+        path: 'cart',
+        element: <Cart />,
+      }
     ],
   },
 ]);

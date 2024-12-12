@@ -22,9 +22,14 @@ const typeDefs = gql`
     trueStock: Int!           # Actual stock available, including reserved stock (if any)
   }
 
+  type Cart {
+    userId: ID!
+    items: [CartItem!]!
+  }
+
   # CartItem type represents a product in the user's cart with quantity info
   type CartItem {
-    product: Product!         # The product in the cart
+    productId: ID!         # The product in the cart
     quantity: Int!            # Quantity of this product in the user's cart
   }
 
@@ -60,7 +65,7 @@ const typeDefs = gql`
     login(email: String!, password: String!): Auth
     addBooking(userId: ID!, staffId: ID!, bookingDate: String!, bookingTime: String!): Booking
     removeBooking(bookingId: ID!): Boolean # Returns true if the booking was successfully removed
-    addToCart(userId: ID!, productId: ID!, quantity: Int!): CartItem # Add a product to the cart
+    addToCart(productId: ID!, quantity: Int!): Cart
     removeFromCart(userId: ID!, productId: ID!): Boolean # Remove a product from the cart
   }
 `;

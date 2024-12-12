@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import "./Shop.css";
 import { GET_PRODUCTS } from '../utils/queries';
+import { ADD_TO_CART } from '../utils/mutations'; // Import the mutation
 
 const Shop = () => {
     const navigate = useNavigate();
     const { loading, error, data } = useQuery(GET_PRODUCTS);
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [cart, setCart] = useState([]);
+    const [addToCart] = useMutation(ADD_TO_CART); // Initialize the mutation
 
     useEffect(() => {
         if (data && data.products) {
@@ -21,13 +24,15 @@ const Shop = () => {
         }
     }, [data]);
 
-    const [cart, setCart] = useState([]);
+    const localImageTesting = 'http://localhost:3099'; // Remove this and replace it wil liveImagePath once live
+    const liveImagePath = import.meta.env.VITE_BACKEND_URL;
 
     const handleClick = (productId) => {
         alert(productId + " selected");
     };
 
-    const handleAddToCart = (product) => {
+    const handleAddToCart = async (product) => {
+
         const quantityToAdd = product.count > 0 ? product.count : 1;
 
         if (quantityToAdd > product.stock) {
@@ -35,27 +40,43 @@ const Shop = () => {
             return;
         }
 
-        const newCartItem = { ...product, quantity: quantityToAdd };
+        try {
+            // Make the GraphQL mutation call
+            const response = await addToCart({
+                variables: {
+                    userId: user._id,
+                    productId: product._id, // Pass the product ID
+                    quantity: quantityToAdd, // Pass the quantity to add
+                },
+            });
 
-        setCart((prevCart) => {
-            const existingProductIndex = prevCart.findIndex(item => item.id === product.id);
+            console.log("Add to cart response:", response.data);
 
-            if (existingProductIndex !== -1) {
-                const updatedCart = [...prevCart];
-                updatedCart[existingProductIndex].quantity += quantityToAdd;
+            // Update the local cart state
+            const newCartItem = { ...product, quantity: quantityToAdd };
+            setCart((prevCart) => {
+                const existingProductIndex = prevCart.findIndex(item => item._id === product._id);
 
-                if (updatedCart[existingProductIndex].quantity > product.stock) {
-                    alert(`Cannot add more than ${product.stock} ${product.name}(s) to the cart.`);
-                    updatedCart[existingProductIndex].quantity = product.stock;
+                if (existingProductIndex !== -1) {
+                    const updatedCart = [...prevCart];
+                    updatedCart[existingProductIndex].quantity += quantityToAdd;
+
+                    if (updatedCart[existingProductIndex].quantity > product.stock) {
+                        alert(`Cannot add more than ${product.stock} ${product.name}(s) to the cart.`);
+                        updatedCart[existingProductIndex].quantity = product.stock;
+                    }
+
+                    return updatedCart;
+                } else {
+                    return [...prevCart, newCartItem];
                 }
+            });
 
-                return updatedCart;
-            } else {
-                return [...prevCart, newCartItem];
-            }
-        });
-
-        alert(`${product.name} added to your cart (${quantityToAdd} item${quantityToAdd > 1 ? 's' : ''})`);
+            alert(`${product.name} added to your cart (${quantityToAdd} item${quantityToAdd > 1 ? 's' : ''})`);
+        } catch (err) {
+            console.error("Error adding to cart:", err);
+            alert("Failed to add item to cart. Please try again.");
+        }
     };
 
     const handleIncreaseCount = (productId) => {
@@ -95,7 +116,7 @@ const Shop = () => {
                                 <h2>{product.name}</h2>
                                 <p>{product.desc} - ${product.price}</p>
                                 <p>Stock available: {product.stock}</p>
-                                <img src={product.imageUrl} alt={product.name} className='productImage' />
+                                <img src={localImageTesting + product.imageUrl} alt={product.name} className='productImage' />
                             </div>
                             <div className="product-controls">
                                 <button onClick={() => handleDecreaseCount(product._id)}>-</button>
